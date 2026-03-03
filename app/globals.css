@@ -4,10 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Universal Box Model Fix ───────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ─── Base ─────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
@@ -16,20 +27,52 @@ body {
   font-family: var(--font-cairo), 'Cairo', sans-serif;
   direction: rtl;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
   min-height: 100vh;
+}
+
+/* ─── Disable custom cursor on touch devices ────────────────────── */
+@media (hover: none) {
+  body {
+    cursor: auto !important;
+  }
+
+  .custom-cursor {
+    display: none !important;
+  }
+
+  #cursor-dot {
+    display: none !important;
+  }
+}
+
+/* ─── Prevent iOS zoom on input focus ──────────────────────────── */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
+
+/* ─── Fix Framer Motion elements overflowing on mobile ─────────── */
+[data-framer-motion] {
+  max-width: 100%;
 }
 
 /* ─── Custom Scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0F0F0F;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #C9A84C;
   border-radius: 2px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #E8C96A;
 }
@@ -58,14 +101,13 @@ body {
 
 /* ─── Utility Classes ───────────────────────────────────────────── */
 @layer utilities {
+
   /* Shimmer effect */
   .shimmer {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(201, 168, 76, 0.6) 50%,
-      transparent 100%
-    );
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(201, 168, 76, 0.6) 50%,
+        transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 2.5s linear infinite;
   }
@@ -75,14 +117,12 @@ body {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(
-      to right,
-      #8B6914,
-      #E8C96A,
-      #C9A84C,
-      #E8C96A,
-      #8B6914
-    );
+    background-image: linear-gradient(to right,
+        #8B6914,
+        #E8C96A,
+        #C9A84C,
+        #E8C96A,
+        #8B6914);
     background-size: 200% auto;
     animation: shimmer 3s linear infinite;
   }
@@ -103,11 +143,9 @@ body {
   /* Section divider line */
   .divider-gold {
     height: 1px;
-    background: linear-gradient(
-      to right,
-      transparent,
-      rgba(201, 168, 76, 0.4),
-      transparent
-    );
+    background: linear-gradient(to right,
+        transparent,
+        rgba(201, 168, 76, 0.4),
+        transparent);
   }
 }

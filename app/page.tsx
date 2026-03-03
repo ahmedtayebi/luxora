@@ -47,8 +47,11 @@ export default function Home() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
-    /* ── Gold custom cursor (desktop) ───────────────────────────── */
+    /* ── Gold custom cursor (desktop + non-touch only) ───────────── */
     useEffect(() => {
+        // Skip completely on touch devices
+        if ('ontouchstart' in window) return
+
         const dot = document.getElementById('cursor-dot')
         if (!dot) return
         let cx = 0, cy = 0
@@ -84,7 +87,7 @@ export default function Home() {
 
     return (
         <>
-            {/* ── Gold cursor dot ──────────────────────────────────────── */}
+            {/* ── Gold cursor dot — hidden on mobile via CSS ────────────── */}
             <div
                 id="cursor-dot"
                 aria-hidden="true"
@@ -103,13 +106,17 @@ export default function Home() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.8, ease: 'easeInOut' }}
                         className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-obsidian"
+                        style={{
+                            paddingTop: 'env(safe-area-inset-top)',
+                            paddingBottom: 'env(safe-area-inset-bottom)',
+                        }}
                     >
                         {/* LUXORA text — shimmer/transparent */}
                         <motion.h1
                             initial={{ opacity: 0, letterSpacing: '0.2em' }}
                             animate={{ opacity: 1, letterSpacing: '0.5em' }}
                             transition={{ delay: 0.2, duration: 1, ease: 'easeOut' }}
-                            className="font-display text-[48px] md:text-[64px] shimmer"
+                            className="font-display text-4xl sm:text-5xl shimmer"
                             style={{ color: 'transparent', backgroundClip: 'text', WebkitBackgroundClip: 'text' }}
                         >
                             LUXORA
@@ -147,7 +154,7 @@ export default function Home() {
                 <Footer />
             </main>
 
-            {/* ── Scroll To Top ────────────────────────────────────────── */}
+            {/* ── Scroll To Top — positioned above WhatsApp ─────────────── */}
             <AnimatePresence>
                 {showScrollTop && (
                     <motion.button
@@ -159,7 +166,7 @@ export default function Home() {
                         whileHover={{ scale: 1.1, borderColor: 'rgba(201,168,76,0.7)' }}
                         onClick={scrollToTop}
                         aria-label="العودة إلى الأعلى"
-                        className="fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full
+                        className="fixed bottom-20 sm:bottom-24 left-4 sm:left-8 z-50 w-11 h-11 rounded-full
                        bg-obsidian-card border border-gold/30
                        flex items-center justify-center
                        hover:bg-gold/10 transition-colors duration-300 group"
@@ -181,11 +188,11 @@ export default function Home() {
 
             {/* ── WhatsApp Floating Button ──────────────────────────────── */}
             <motion.div
-                className="fixed bottom-8 right-8 z-50 flex flex-col items-center gap-2"
+                className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 z-50 flex flex-col items-center gap-2"
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
             >
-                {/* Tooltip */}
+                {/* Tooltip — desktop only via hover */}
                 <AnimatePresence>
                     {showWATooltip && (
                         <motion.div

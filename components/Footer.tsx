@@ -63,11 +63,11 @@ function ContactRow({ icon, label, value, href, ltr }: {
     href?: string
     ltr?: boolean
 }) {
-    const textCls = 'font-display text-[14px] text-gold'
+    const textCls = 'font-display text-[14px] text-gold break-all'
     return (
         <div className="flex items-start gap-3 mb-4">
             <span className="text-gold/50 mt-0.5 flex-shrink-0">{icon}</span>
-            <div>
+            <div className="min-w-0">
                 <span className="font-body text-[10px] text-mist/50 tracking-wider block mb-0.5">{label}</span>
                 {href ? (
                     <a href={href} className={textCls} dir={ltr ? 'ltr' : undefined}>
@@ -97,7 +97,7 @@ export default function Footer() {
           NEWSLETTER STRIP
       ════════════════════════════════════════════════════════ */}
             <div
-                className="py-10 px-6 text-center"
+                className="py-10 px-4 sm:px-6 text-center"
                 style={{
                     backgroundColor: '#0F0F0F',
                     borderBottom: '1px solid rgba(201,168,76,0.08)',
@@ -110,7 +110,7 @@ export default function Footer() {
                     transition={{ duration: 0.7 }}
                     className="max-w-lg mx-auto"
                 >
-                    <h3 className="font-display text-[24px] text-ivory">
+                    <h3 className="font-display text-[22px] sm:text-[24px] text-ivory">
                         اشترك في نشرتنا البريدية
                     </h3>
                     <p className="font-body text-[13px] text-mist mt-2 mb-6">
@@ -124,7 +124,7 @@ export default function Footer() {
                                 initial={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onSubmit={handleSubscribe}
-                                className="flex max-w-sm mx-auto"
+                                className="flex flex-col sm:flex-row max-w-sm mx-auto gap-2 sm:gap-0"
                             >
                                 <input
                                     type="email"
@@ -133,17 +133,20 @@ export default function Footer() {
                                     placeholder="بريدك الإلكتروني"
                                     required
                                     dir="ltr"
+                                    style={{ fontSize: '16px' }}
                                     className="flex-1 bg-obsidian-soft border border-[rgba(201,168,76,0.15)]
-                             border-l-0 px-4 py-3 font-body text-[13px] text-ivory
+                             sm:border-l-0 px-4 py-3 font-body text-[13px] text-ivory
                              placeholder:text-mist/30 outline-none focus:border-gold/40
-                             transition-colors duration-300 rounded-r-[2px]"
+                             transition-colors duration-300 rounded-sm sm:rounded-r-[2px] sm:rounded-l-none
+                             w-full"
                                 />
                                 <button
                                     type="submit"
-                                    className="px-8 py-3 border border-[rgba(201,168,76,0.3)] rounded-l-[2px]
+                                    className="px-8 py-3 border border-[rgba(201,168,76,0.3)]
+                             rounded-sm sm:rounded-l-[2px] sm:rounded-r-none
                              font-body text-[12px] tracking-wider text-gold
                              hover:bg-gold hover:text-obsidian hover:border-gold
-                             transition-all duration-300 whitespace-nowrap"
+                             transition-all duration-300 whitespace-nowrap w-full sm:w-auto"
                                 >
                                     اشتراك
                                 </button>
@@ -168,11 +171,11 @@ export default function Footer() {
             {/* ════════════════════════════════════════════════════════
           MAIN FOOTER GRID
       ════════════════════════════════════════════════════════ */}
-            <div className="max-w-7xl mx-auto px-6 py-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12">
 
                     {/* ── Column 1: Brand ─────────────────────────────── */}
-                    <div className="lg:col-span-1">
+                    <div className="lg:col-span-1 text-center sm:text-right">
                         <a href="#hero">
                             <span className="font-display text-[32px] leading-none" style={goldGrad}>
                                 لوكسورا
@@ -181,14 +184,14 @@ export default function Footer() {
                         <p className="font-body text-[9px] tracking-[0.6em] text-mist mt-1">
                             HAUTE PARFUM
                         </p>
-                        <div className="w-12 h-px bg-gradient-to-l from-gold/50 to-transparent mt-4 mb-5" />
-                        <p className="font-body text-[13px] text-mist leading-[1.9] max-w-[240px]">
+                        <div className="w-12 h-px bg-gradient-to-l from-gold/50 to-transparent mt-4 mb-5 mx-auto sm:mx-0" />
+                        <p className="font-body text-[13px] text-mist leading-[1.9] max-w-[240px] mx-auto sm:mx-0">
                             دار عطور فاخرة تجمع بين روح الشرق وأناقة باريس.
                             كل عطر قصة، كل قطرة ذاكرة.
                         </p>
 
                         {/* Social icons */}
-                        <div className="flex gap-3 mt-6">
+                        <div className="flex gap-3 mt-6 justify-center sm:justify-start">
                             {/* Instagram */}
                             <SocialIcon href="#" label="Instagram">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
@@ -213,27 +216,31 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* ── Column 2: Quick links ────────────────────────── */}
-                    <div>
-                        <ColHead>روابط سريعة</ColHead>
-                        <nav className="flex flex-col">
-                            <FooterLink href="#collection" label="المجموعة" />
-                            <FooterLink href="#story" label="قصتنا" />
-                            <FooterLink href="#how-to-order" label="كيفية الطلب" />
-                            <FooterLink href="#order" label="اطلب الآن" />
-                        </nav>
-                    </div>
+                    {/* ── Columns 2 & 3 in a subgrid on mobile ────────── */}
+                    {/* On mobile these 2 columns sit side-by-side (2 cols each half) */}
+                    <div className="grid grid-cols-2 md:contents gap-8 md:gap-0">
+                        {/* Column 2: Quick links */}
+                        <div>
+                            <ColHead>روابط سريعة</ColHead>
+                            <nav className="flex flex-col">
+                                <FooterLink href="#collection" label="المجموعة" />
+                                <FooterLink href="#story" label="قصتنا" />
+                                <FooterLink href="#how-to-order" label="كيفية الطلب" />
+                                <FooterLink href="#order" label="اطلب الآن" />
+                            </nav>
+                        </div>
 
-                    {/* ── Column 3: Collections ────────────────────────── */}
-                    <div>
-                        <ColHead>مجموعاتنا</ColHead>
-                        <nav className="flex flex-col">
-                            <FooterLink href="#collection" label="المجموعة السوداء" />
-                            <FooterLink href="#collection" label="المجموعة الذهبية" />
-                            <FooterLink href="#collection" label="المجموعة الكلاسيكية" />
-                            <FooterLink href="#collection" label="المجموعة الشرقية" />
-                            <FooterLink href="#collection" label="المجموعة الزرقاء" />
-                        </nav>
+                        {/* Column 3: Collections */}
+                        <div>
+                            <ColHead>مجموعاتنا</ColHead>
+                            <nav className="flex flex-col">
+                                <FooterLink href="#collection" label="المجموعة السوداء" />
+                                <FooterLink href="#collection" label="المجموعة الذهبية" />
+                                <FooterLink href="#collection" label="المجموعة الكلاسيكية" />
+                                <FooterLink href="#collection" label="المجموعة الشرقية" />
+                                <FooterLink href="#collection" label="المجموعة الزرقاء" />
+                            </nav>
+                        </div>
                     </div>
 
                     {/* ── Column 4: Contact ────────────────────────────── */}
@@ -294,14 +301,14 @@ export default function Footer() {
           BOTTOM BAR
       ════════════════════════════════════════════════════════ */}
             <div
-                className="px-6 py-6"
+                className="px-4 sm:px-6 py-6"
                 style={{ borderTop: '1px solid rgba(201,168,76,0.08)' }}
             >
-                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="max-w-7xl mx-auto flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:justify-between">
                     <p className="font-body text-[11px] text-mist/40">
                         © ٢٠٢٤ لوكسورا. جميع الحقوق محفوظة.
                     </p>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
                         <a href="#" className="font-body text-[11px] text-mist/40 hover:text-gold transition-colors duration-200">
                             سياسة الخصوصية
                         </a>

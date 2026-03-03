@@ -55,25 +55,25 @@ export default function Navbar() {
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className={`fixed top-0 inset-x-0 z-[100] transition-all duration-500 ${scrolled
-                        ? 'bg-obsidian/90 backdrop-blur-lg border-b border-gold-subtle py-3'
-                        : 'bg-transparent py-5'
+                className={`fixed top-0 inset-x-0 z-[100] transition-all duration-500 overflow-hidden max-w-full ${scrolled
+                    ? 'bg-obsidian/90 backdrop-blur-lg border-b border-gold-subtle py-3'
+                    : 'bg-transparent py-3 sm:py-5'
                     }`}
                 style={{
                     borderBottomColor: scrolled ? 'rgba(201,168,76,0.08)' : 'transparent',
                 }}
             >
-                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between h-12 sm:h-14">
                     {/* ── Logo (right side in RTL) ───────────────────────────── */}
                     <a
                         href="#hero"
                         onClick={(e) => { e.preventDefault(); handleNav('#hero') }}
                         className="group flex flex-col items-start gap-0 relative overflow-hidden"
                     >
-                        <span className="font-display text-[22px] text-gold leading-tight group-hover:shimmer transition-all duration-500">
+                        <span className="font-display text-lg sm:text-xl md:text-2xl text-gold leading-tight group-hover:shimmer transition-all duration-500">
                             لوكسورا
                         </span>
-                        <span className="font-body text-[8px] tracking-[0.5em] text-mist uppercase leading-none mt-0.5">
+                        <span className="hidden sm:block font-body text-[8px] tracking-[0.5em] text-mist uppercase leading-none mt-0.5">
                             Haute Parfum
                         </span>
                         {/* Shimmer overlay on hover */}
@@ -108,7 +108,7 @@ export default function Navbar() {
 
                     {/* ── Right side: WhatsApp + Hamburger ───────────────────── */}
                     <div className="flex items-center gap-4">
-                        {/* WhatsApp button */}
+                        {/* WhatsApp button — desktop only */}
                         <motion.a
                             href="https://wa.me/"
                             target="_blank"
@@ -137,26 +137,27 @@ export default function Navbar() {
                             </svg>
                         </motion.a>
 
-                        {/* Mobile hamburger */}
+                        {/* Mobile hamburger — 40x40px minimum touch target */}
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
                             aria-label={menuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
-                            className="md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-[5px] z-[110]"
+                            className="md:hidden relative flex flex-col items-center justify-center gap-[6px] z-[110]"
+                            style={{ width: 40, height: 40 }}
                         >
                             <motion.span
                                 animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
                                 transition={{ duration: 0.3 }}
-                                className="block w-6 h-[1px] bg-gold origin-center"
+                                className="block w-6 h-px bg-gold origin-center"
                             />
                             <motion.span
                                 animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
                                 transition={{ duration: 0.2 }}
-                                className="block w-6 h-[1px] bg-gold"
+                                className="block w-6 h-px bg-gold"
                             />
                             <motion.span
                                 animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
                                 transition={{ duration: 0.3 }}
-                                className="block w-6 h-[1px] bg-gold origin-center"
+                                className="block w-6 h-px bg-gold origin-center"
                             />
                         </button>
                     </div>
@@ -172,10 +173,11 @@ export default function Navbar() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.35 }}
-                        className="fixed inset-0 z-[105] bg-obsidian flex flex-col items-center justify-center"
+                        className="fixed inset-0 z-[105] flex flex-col overflow-y-auto"
+                        style={{ backgroundColor: '#070707' }}
                     >
-                        {/* Nav links staggered */}
-                        <nav className="flex flex-col items-center gap-8">
+                        {/* Nav links — staggered, top-padded to clear navbar */}
+                        <nav className="flex flex-col items-center pt-24 pb-10 flex-1">
                             {navLinks.map((link, i) => (
                                 <motion.a
                                     key={link.href}
@@ -186,39 +188,44 @@ export default function Navbar() {
                                     initial="hidden"
                                     animate="visible"
                                     exit="exit"
-                                    className="font-display text-[36px] text-ivory hover:text-gold
-                             transition-colors duration-300"
+                                    className="block w-full text-center font-display text-3xl text-ivory
+                             hover:text-gold transition-colors duration-300 py-5"
+                                    style={{
+                                        borderBottom: '1px solid rgba(201,168,76,0.1)',
+                                    }}
                                 >
                                     {link.label}
                                 </motion.a>
                             ))}
-                        </nav>
 
-                        {/* WhatsApp in mobile menu */}
-                        <motion.a
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5, duration: 0.4 }}
-                            href="https://wa.me/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-12 flex items-center gap-3 text-gold font-body text-sm tracking-wider
-                         border border-gold/30 px-6 py-3 rounded-sm
+                            {/* WhatsApp CTA in mobile menu */}
+                            <motion.a
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5, duration: 0.4 }}
+                                href="https://wa.me/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-8 mx-6 w-[calc(100%-3rem)] flex items-center justify-center gap-3
+                         text-gold font-body text-sm tracking-wider
+                         border border-gold/30 px-6 py-4 rounded-sm
                          hover:bg-gold/10 transition-colors duration-300"
-                        >
-                            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.174-.008-.372-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                                <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.105-1.137l-.295-.176-2.829.84.84-2.829-.176-.295A7.96 7.96 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z" />
-                            </svg>
-                            تواصل عبر واتساب
-                        </motion.a>
+                                style={{ backgroundColor: 'rgba(201,168,76,0.05)' }}
+                            >
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.174-.008-.372-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.105-1.137l-.295-.176-2.829.84.84-2.829-.176-.295A7.96 7.96 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z" />
+                                </svg>
+                                تواصل عبر واتساب
+                            </motion.a>
+                        </nav>
 
                         {/* Decorative bottom line */}
                         <motion.div
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="absolute bottom-12 w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent"
+                            className="w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mx-auto mb-12"
                         />
                     </motion.div>
                 )}

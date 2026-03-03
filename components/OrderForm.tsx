@@ -109,7 +109,7 @@ interface FieldErrors {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FLOATING INPUT
+   FLOATING INPUT — min height 48px, font-size 16px (no iOS zoom)
    ═══════════════════════════════════════════════════════════════ */
 function FloatingInput({
     label,
@@ -137,7 +137,7 @@ function FloatingInput({
                 className={`absolute right-0 transition-all duration-300 pointer-events-none font-body
           ${hasValue
                         ? 'top-0 text-[10px] tracking-wider text-gold'
-                        : 'top-[10px] text-[13px] text-mist/50'
+                        : 'top-[14px] text-[13px] text-mist/50'
                     }`}
             >
                 {label}{required && ' *'}
@@ -148,9 +148,10 @@ function FloatingInput({
                 onChange={(e) => onChange(e.target.value)}
                 dir={dir}
                 placeholder={hasValue ? placeholder : ''}
+                style={{ fontSize: '16px', minHeight: '48px' }}
                 className="w-full bg-transparent border-b border-[rgba(201,168,76,0.2)]
-                   focus:border-gold text-ivory font-body text-[14px]
-                   py-2 pt-5 outline-none transition-colors duration-300"
+                   focus:border-gold text-ivory font-body
+                   py-2 pt-6 outline-none transition-colors duration-300"
             />
             {error && (
                 <p className="absolute bottom-0 right-0 font-body text-[11px] text-red-400">
@@ -162,7 +163,7 @@ function FloatingInput({
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   CUSTOM SEARCHABLE DROPDOWN
+   WILAYA BOTTOM-SHEET DROPDOWN (mobile) / regular dropdown (desktop)
    ═══════════════════════════════════════════════════════════════ */
 function CustomSelect<T extends { label: string; value: string }>({
     label,
@@ -183,21 +184,58 @@ function CustomSelect<T extends { label: string; value: string }>({
 }) {
     const [open, setOpen] = useState(false)
     const [search, setSearch] = useState('')
+    const [isMobile, setIsMobile] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
+    const searchRef = useRef<HTMLInputElement>(null)
 
     const selectedOption = options.find((o) => o.value === value)
     const filtered = search
         ? options.filter((o) => o.label.includes(search))
         : options
 
-    /* Close on click outside */
     useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
+    /* Close on click outside (desktop only) */
+    useEffect(() => {
+        if (isMobile) return
         const handler = (e: MouseEvent) => {
             if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
         }
         document.addEventListener('mousedown', handler)
         return () => document.removeEventListener('mousedown', handler)
-    }, [])
+    }, [isMobile])
+
+    /* Lock body scroll when mobile bottom-sheet is open */
+    useEffect(() => {
+        if (isMobile && open) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+        return () => { document.body.style.overflow = '' }
+    }, [isMobile, open])
+
+    /* Auto-focus search input when sheet opens */
+    useEffect(() => {
+        if (open && searchRef.current) {
+            setTimeout(() => searchRef.current?.focus(), 100)
+        }
+    }, [open])
+
+    const handleOpen = () => {
+        setOpen(!open)
+        setSearch('')
+    }
+
+    const handleSelect = (val: string) => {
+        onChange(val)
+        setOpen(false)
+    }
 
     return (
         <div ref={ref} className="relative pb-5">
@@ -205,7 +243,7 @@ function CustomSelect<T extends { label: string; value: string }>({
                 className={`absolute right-0 transition-all duration-300 pointer-events-none font-body
           ${value
                         ? 'top-0 text-[10px] tracking-wider text-gold'
-                        : 'top-[10px] text-[13px] text-mist/50'
+                        : 'top-[14px] text-[13px] text-mist/50'
                     }`}
             >
                 {label}{required && ' *'}
@@ -214,10 +252,11 @@ function CustomSelect<T extends { label: string; value: string }>({
             {/* Trigger button */}
             <button
                 type="button"
-                onClick={() => { setOpen(!open); setSearch('') }}
+                onClick={handleOpen}
+                style={{ minHeight: '48px', fontSize: '16px' }}
                 className="w-full bg-transparent border-b border-[rgba(201,168,76,0.2)]
-                   focus:border-gold text-right font-body text-[14px] text-ivory
-                   py-2 pt-5 outline-none transition-colors duration-300
+                   focus:border-gold text-right font-body text-ivory
+                   py-2 pt-6 outline-none transition-colors duration-300
                    flex items-center justify-between"
             >
                 <span className={selectedOption ? 'text-ivory' : 'text-mist/30'}>
@@ -234,9 +273,85 @@ function CustomSelect<T extends { label: string; value: string }>({
                 </svg>
             </button>
 
-            {/* Dropdown */}
+            {/* ── Mobile Bottom Sheet ─────────────────────────────────── */}
             <AnimatePresence>
-                {open && (
+                {open && isMobile && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 z-[200] bg-black/60"
+                            onClick={() => setOpen(false)}
+                        />
+                        {/* Sheet */}
+                        <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                            className="fixed bottom-0 left-0 right-0 z-[201] rounded-t-xl overflow-hidden"
+                            style={{
+                                height: '60vh',
+                                backgroundColor: '#131313',
+                                border: '1px solid rgba(201,168,76,0.15)',
+                                borderBottom: 'none',
+                            }}
+                        >
+                            {/* Drag handle */}
+                            <div className="flex justify-center pt-3 pb-2">
+                                <div className="w-12 h-1 rounded-full bg-gold/20" />
+                            </div>
+
+                            {/* Search */}
+                            <div className="px-4 pb-3 border-b border-[rgba(201,168,76,0.1)] sticky top-0 bg-[#131313]">
+                                <input
+                                    ref={searchRef}
+                                    type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="ابحث عن ولايتك..."
+                                    style={{ fontSize: '16px' }}
+                                    className="w-full bg-[#0D0D0D] px-4 py-3 font-body text-ivory
+                           placeholder:text-mist/30 outline-none rounded-sm
+                           border border-[rgba(201,168,76,0.1)]"
+                                />
+                            </div>
+
+                            {/* Options */}
+                            <div className="overflow-y-auto h-[calc(60vh-100px)] custom-scrollbar">
+                                {filtered.length === 0 && (
+                                    <div className="px-4 py-3 text-mist/40 text-[13px] font-body text-center">
+                                        لم يتم العثور على نتائج
+                                    </div>
+                                )}
+                                {filtered.map((opt) => (
+                                    <button
+                                        key={opt.value}
+                                        type="button"
+                                        onClick={() => handleSelect(opt.value)}
+                                        style={{ minHeight: '48px' }}
+                                        className={`w-full text-right px-4 py-3 font-body text-[14px]
+                             transition-colors duration-150
+                             ${opt.value === value
+                                                ? 'text-gold bg-gold/5'
+                                                : 'text-ivory hover:bg-[rgba(201,168,76,0.1)] hover:text-gold'
+                                            }`}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* ── Desktop Dropdown ─────────────────────────────────────── */}
+            <AnimatePresence>
+                {open && !isMobile && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: -4 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -247,19 +362,21 @@ function CustomSelect<T extends { label: string; value: string }>({
                        shadow-[0_10px_40px_rgba(0,0,0,0.6)] overflow-hidden"
                     >
                         {/* Search */}
-                        <div className="p-2 border-b border-obsidian-border">
+                        <div className="p-2 border-b border-obsidian-border sticky top-0 bg-[#131313]">
                             <input
+                                ref={searchRef}
                                 type="text"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="ابحث عن ولايتك..."
-                                className="w-full bg-obsidian-soft px-3 py-2 text-[13px] font-body text-ivory
+                                style={{ fontSize: '16px' }}
+                                className="w-full bg-obsidian-soft px-3 py-2 font-body text-ivory
                            placeholder:text-mist/30 outline-none rounded-[2px]"
                                 autoFocus
                             />
                         </div>
                         {/* Options */}
-                        <div className="max-h-[240px] overflow-y-auto custom-scrollbar">
+                        <div className="max-h-[50vh] overflow-y-auto custom-scrollbar">
                             {filtered.length === 0 && (
                                 <div className="px-4 py-3 text-mist/40 text-[13px] font-body text-center">
                                     لم يتم العثور على نتائج
@@ -269,7 +386,7 @@ function CustomSelect<T extends { label: string; value: string }>({
                                 <button
                                     key={opt.value}
                                     type="button"
-                                    onClick={() => { onChange(opt.value); setOpen(false) }}
+                                    onClick={() => handleSelect(opt.value)}
                                     className={`w-full text-right px-4 py-2.5 font-body text-[13px]
                              transition-colors duration-150
                              ${opt.value === value
@@ -387,7 +504,7 @@ export default function OrderForm() {
         form.perfume
 
     return (
-        <section id="order" className="py-28 px-6 relative bg-obsidian">
+        <section id="order" className="py-20 sm:py-28 px-4 sm:px-6 relative bg-obsidian">
             {/* Glow */}
             <div
                 className="absolute inset-0 pointer-events-none"
@@ -404,7 +521,7 @@ export default function OrderForm() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-80px' }}
                     transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="text-center mb-14"
+                    className="text-center mb-10 sm:mb-14"
                 >
                     <div className="flex items-center justify-center gap-4 mb-5">
                         <span className="block w-16 h-px bg-gradient-to-r from-transparent to-gold/40" />
@@ -413,10 +530,10 @@ export default function OrderForm() {
                         </span>
                         <span className="block w-16 h-px bg-gradient-to-l from-transparent to-gold/40" />
                     </div>
-                    <h2 className="font-display text-[48px] md:text-[56px] text-ivory leading-tight">
+                    <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ivory leading-tight">
                         ملكية تليق بك
                     </h2>
-                    <p className="font-body text-[15px] text-mist mt-3">
+                    <p className="font-body text-sm sm:text-[15px] text-mist mt-3 px-4">
                         نموذج الطلب — توصيل إلى جميع ولايات الجزائر
                     </p>
                 </motion.div>
@@ -429,13 +546,13 @@ export default function OrderForm() {
                             initial={{ opacity: 1 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.35 }}
-                            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+                            className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8"
                         >
                             {/* ── FORM CARD ─────────────────────────────────── */}
                             <motion.div
                                 animate={shake ? { x: [0, -8, 8, -8, 8, 0] } : {}}
                                 transition={{ duration: 0.4 }}
-                                className="lg:col-span-2 rounded-[2px] p-7 md:p-12"
+                                className="rounded-[2px] p-6 sm:p-8 lg:p-12"
                                 style={{
                                     background: 'linear-gradient(180deg, #0F0F0F 0%, #0D0D0D 100%)',
                                     border: '1px solid rgba(201,168,76,0.15)',
@@ -506,30 +623,32 @@ export default function OrderForm() {
                                         placeholder="اختر العطر..."
                                     />
 
-                                    {/* Quantity with +/- */}
+                                    {/* Quantity with +/- — 48px touch targets */}
                                     <div className="relative pb-5">
                                         <label className="absolute right-0 top-0 text-[10px] tracking-wider text-gold font-body pointer-events-none">
                                             الكمية *
                                         </label>
-                                        <div className="flex items-center mt-5 border-b border-[rgba(201,168,76,0.2)]">
+                                        <div className="flex items-center mt-6 border-b border-[rgba(201,168,76,0.2)]">
                                             <button
                                                 type="button"
                                                 onClick={() => set('quantity', Math.max(1, form.quantity - 1))}
-                                                className="w-10 h-10 flex items-center justify-center
+                                                className="w-12 h-12 flex items-center justify-center
                                    text-gold/60 hover:text-gold text-xl font-light
-                                   transition-colors duration-200"
+                                   border border-[rgba(201,168,76,0.2)] rounded-sm
+                                   transition-colors duration-200 flex-shrink-0"
                                             >
                                                 −
                                             </button>
-                                            <span className="flex-1 text-center font-display text-[18px] text-ivory">
+                                            <span className="flex-1 text-center font-display text-[18px] text-ivory min-w-[3rem]">
                                                 {form.quantity}
                                             </span>
                                             <button
                                                 type="button"
                                                 onClick={() => set('quantity', Math.min(10, form.quantity + 1))}
-                                                className="w-10 h-10 flex items-center justify-center
+                                                className="w-12 h-12 flex items-center justify-center
                                    text-gold/60 hover:text-gold text-xl font-light
-                                   transition-colors duration-200"
+                                   border border-[rgba(201,168,76,0.2)] rounded-sm
+                                   transition-colors duration-200 flex-shrink-0"
                                             >
                                                 +
                                             </button>
@@ -537,13 +656,13 @@ export default function OrderForm() {
                                     </div>
                                 </div>
 
-                                {/* Row 5 */}
+                                {/* Row 5 — Textarea */}
                                 <div className="mt-2 relative pb-5">
                                     <label
                                         className={`absolute right-0 transition-all duration-300 pointer-events-none font-body
-                      ${form.notes
+                       ${form.notes
                                                 ? 'top-0 text-[10px] tracking-wider text-gold'
-                                                : 'top-[10px] text-[13px] text-mist/50'
+                                                : 'top-[14px] text-[13px] text-mist/50'
                                             }`}
                                     >
                                         ملاحظات إضافية
@@ -553,44 +672,71 @@ export default function OrderForm() {
                                         onChange={(e) => set('notes', e.target.value)}
                                         rows={3}
                                         placeholder={form.notes ? 'أي تعليمات خاصة للتوصيل...' : ''}
+                                        style={{ fontSize: '16px', minHeight: '100px' }}
                                         className="w-full bg-transparent border-b border-[rgba(201,168,76,0.2)]
-                               focus:border-gold text-ivory font-body text-[14px]
-                               py-2 pt-5 outline-none resize-none transition-colors duration-300"
+                               focus:border-gold text-ivory font-body
+                               py-2 pt-6 outline-none resize-none transition-colors duration-300"
                                     />
                                 </div>
 
-                                {/* Submit button */}
-                                <motion.button
-                                    onClick={handleSubmit}
-                                    disabled={loading || !canSubmit}
-                                    whileHover={canSubmit && !loading ? { y: -2, boxShadow: '0 8px 30px rgba(201,168,76,0.3)' } : {}}
-                                    whileTap={canSubmit && !loading ? { scale: 0.99 } : {}}
-                                    className="w-full h-14 mt-6 border border-gold rounded-[2px]
-                             font-body text-[14px] tracking-[0.3em]
+                                {/* Mobile order summary strip — shown above submit on mobile */}
+                                {(form.perfume || form.wilaya) && (
+                                    <div
+                                        className="lg:hidden rounded-sm p-4 mb-4 flex items-center justify-between gap-2 flex-wrap"
+                                        style={{
+                                            backgroundColor: '#0F0F0F',
+                                            border: '1px solid rgba(201,168,76,0.1)',
+                                        }}
+                                    >
+                                        <div className="font-body text-[12px] text-mist/70 leading-relaxed">
+                                            {form.perfume && <span>العطر: <strong className="text-ivory">{form.perfume}</strong></span>}
+                                            {form.perfume && form.wilaya && <span className="mx-2 text-gold/30">|</span>}
+                                            {form.wilaya && selectedWilaya && <span>الولاية: <strong className="text-ivory">{selectedWilaya.name}</strong></span>}
+                                            {form.wilaya && <span className="mx-2 text-gold/30">|</span>}
+                                            <span>الكمية: <strong className="text-ivory">{form.quantity}</strong></span>
+                                        </div>
+                                        {totalPrice > 0 && (
+                                            <span className="font-display text-[18px] text-gold flex-shrink-0">
+                                                {fmtPrice(totalPrice)} دج
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Submit button — sticky on mobile */}
+                                <div className="sticky bottom-0 lg:static py-3 lg:py-0" style={{ backgroundColor: 'rgba(7,7,7,0.95)', backdropFilter: 'blur(8px)' }}>
+                                    <motion.button
+                                        onClick={handleSubmit}
+                                        disabled={loading || !canSubmit}
+                                        whileHover={canSubmit && !loading ? { y: -2, boxShadow: '0 8px 30px rgba(201,168,76,0.3)' } : {}}
+                                        whileTap={canSubmit && !loading ? { scale: 0.99 } : {}}
+                                        className="w-full h-14 border border-gold rounded-[2px]
+                             font-body text-sm sm:text-[14px] tracking-[0.3em]
                              transition-all duration-300 flex items-center justify-center gap-3
                              disabled:opacity-40 disabled:cursor-not-allowed
                              bg-transparent text-gold
                              hover:bg-gold hover:text-obsidian"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="30 70" />
-                                            </svg>
-                                            جارٍ الإرسال...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
-                                                <path d="M10 4L6 8l4 4" />
-                                            </svg>
-                                            إتمام الطلب
-                                        </>
-                                    )}
-                                </motion.button>
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="30 70" />
+                                                </svg>
+                                                جارٍ الإرسال...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
+                                                    <path d="M10 4L6 8l4 4" />
+                                                </svg>
+                                                إتمام الطلب
+                                            </>
+                                        )}
+                                    </motion.button>
+                                </div>
                             </motion.div>
 
-                            {/* ── ORDER SUMMARY SIDEBAR ─────────────────────── */}
+                            {/* ── ORDER SUMMARY SIDEBAR (desktop only) ──────────── */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -674,10 +820,10 @@ export default function OrderForm() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                            className="max-w-xl mx-auto text-center py-12"
+                            className="max-w-xl mx-auto text-center py-12 px-4"
                         >
                             {/* Animated checkmark */}
-                            <div className="relative w-24 h-24 mx-auto mb-8">
+                            <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-8">
                                 <svg viewBox="0 0 96 96" className="w-full h-full">
                                     <circle
                                         cx="48"
@@ -715,7 +861,7 @@ export default function OrderForm() {
                                 </svg>
                             </div>
 
-                            <h3 className="font-display text-[36px] text-ivory mb-3">
+                            <h3 className="font-display text-2xl sm:text-3xl text-ivory mb-3">
                                 تم استلام طلبك!
                             </h3>
                             <p className="font-body text-[15px] text-mist leading-[1.8] mb-8 max-w-sm mx-auto">
@@ -732,19 +878,19 @@ export default function OrderForm() {
                                 </span>
                             </div>
 
-                            {/* WhatsApp CTA */}
-                            <div>
+                            {/* WhatsApp CTA — full width on mobile */}
+                            <div className="px-4">
                                 <a
                                     href={`https://wa.me/?text=${encodeURIComponent(`مرحباً، أريد متابعة طلبي رقم #${refNum}`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-3 px-8 py-4
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4
                              border border-gold/40 rounded-[2px]
                              font-body text-[13px] tracking-wider text-gold
                              hover:bg-gold/10 hover:border-gold
                              transition-all duration-300"
                                 >
-                                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.5 12.5 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
                                         <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.105-1.137l-.295-.176-2.829.84.84-2.829-.176-.295A7.96 7.96 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z" />
                                     </svg>

@@ -45,31 +45,39 @@ export default function Hero() {
         const ctx = canvas.getContext('2d')
         if (!ctx) return
 
+        // Skip on touch devices to save performance
+        if ('ontouchstart' in window && window.innerWidth < 640) {
+            // Still run but with fewer particles on mobile
+        }
+
         let animId: number
         let particles: Particle[] = []
 
         const resize = () => {
             canvas.width = window.innerWidth
             canvas.height = window.innerHeight
+            canvas.style.maxWidth = '100vw'
         }
         resize()
         window.addEventListener('resize', resize)
 
-        // Create 80 particles
+        // Reduce particle count on mobile
+        const particleCount = window.innerWidth < 640 ? 30 : 80
+
         const createParticle = (): Particle => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             size: 1 + Math.random() * 2,
             opacity: 0,
-            vx: (Math.random() - 0.5) * 0.6,   // -0.3 to 0.3
-            vy: -0.2 + Math.random() * 0.3,      // -0.2 to 0.1
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: -0.2 + Math.random() * 0.3,
             life: 0,
             maxLife: 200 + Math.random() * 300,
         })
 
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < particleCount; i++) {
             const p = createParticle()
-            p.life = Math.random() * p.maxLife // randomize start phase
+            p.life = Math.random() * p.maxLife
             particles.push(p)
         }
 
@@ -79,14 +87,12 @@ export default function Hero() {
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i]
 
-                // advance life
                 p.life++
                 if (p.life > p.maxLife) {
                     particles[i] = createParticle()
                     continue
                 }
 
-                // fade in/out based on lifespan
                 const lifePct = p.life / p.maxLife
                 if (lifePct < 0.15) {
                     p.opacity = (lifePct / 0.15) * (0.1 + Math.random() * 0.4)
@@ -94,17 +100,14 @@ export default function Hero() {
                     p.opacity *= 0.98
                 }
 
-                // drift
                 p.x += p.vx
                 p.y += p.vy
 
-                // wrap edges
                 if (p.x < 0) p.x = canvas.width
                 if (p.x > canvas.width) p.x = 0
                 if (p.y < 0) p.y = canvas.height
                 if (p.y > canvas.height) p.y = 0
 
-                // draw
                 ctx.beginPath()
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
                 ctx.fillStyle = `rgba(201, 168, 76, ${Math.min(p.opacity, 0.5)})`
@@ -137,6 +140,7 @@ export default function Hero() {
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 z-0"
+                style={{ maxWidth: '100vw' }}
                 aria-hidden="true"
             />
 
@@ -144,7 +148,7 @@ export default function Hero() {
             <div className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none">
                 <svg
                     viewBox="0 0 500 500"
-                    className="w-[500px] h-[500px] md:w-[500px] md:h-[500px] w-[300px] h-[300px] animate-[spin_40s_linear_infinite]"
+                    className="w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] lg:w-[500px] lg:h-[500px] animate-[spin_40s_linear_infinite] opacity-5 sm:opacity-10"
                     fill="none"
                 >
                     {/* Concentric circles */}
@@ -168,15 +172,15 @@ export default function Hero() {
             </div>
 
             {/* ── Layer 3: Text content ──────────────────────────────── */}
-            <div className="absolute inset-0 z-[2] flex items-center justify-center">
-                <div className="text-center px-6 max-w-2xl mx-auto">
+            <div className="absolute inset-0 z-[2] flex items-center justify-center overflow-hidden">
+                <div className="w-full text-center px-6 sm:px-8 max-w-full overflow-hidden">
 
                     {/* Item 1: Collection label */}
                     <motion.p
                         variants={fadeUp(0.2)}
                         initial="hidden"
                         animate="visible"
-                        className="font-body text-[11px] tracking-[0.6em] text-gold/70 mb-6"
+                        className="font-body text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.6em] text-gold/70 mb-6"
                     >
                         — مجموعة حصرية ٢٠٢٤ —
                     </motion.p>
@@ -186,9 +190,10 @@ export default function Hero() {
                         variants={fadeUpLarge(0.4)}
                         initial="hidden"
                         animate="visible"
-                        className="font-display leading-none mb-6"
+                        className="font-display leading-none mb-6 max-w-full overflow-hidden"
                         style={{
-                            fontSize: 'clamp(72px, 12vw, 140px)',
+                            fontSize: 'clamp(52px, 16vw, 140px)',
+                            wordBreak: 'keep-all',
                             background: 'linear-gradient(135deg, #8B6914 20%, #E8C96A 50%, #8B6914 80%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
@@ -211,7 +216,7 @@ export default function Hero() {
                         variants={fadeUp(0.8)}
                         initial="hidden"
                         animate="visible"
-                        className="font-display italic text-[22px] text-ivory/80 mb-5"
+                        className="font-display italic text-base sm:text-xl text-ivory/80 mb-5 px-4 max-w-[90vw] mx-auto"
                     >
                         حيث تُصنع الفخامة الحقيقية
                     </motion.p>
@@ -221,7 +226,7 @@ export default function Hero() {
                         variants={fadeUp(1.0)}
                         initial="hidden"
                         animate="visible"
-                        className="font-body text-[15px] text-mist leading-[1.8] max-w-[440px] mx-auto mb-10"
+                        className="font-body text-sm sm:text-[15px] text-mist leading-[1.8] max-w-[90vw] sm:max-w-[440px] mx-auto mb-10 px-4"
                     >
                         عطور حصرية مستوحاة من أرقى المواد الخام العالمية
                     </motion.p>
@@ -231,13 +236,14 @@ export default function Hero() {
                         variants={fadeUp(1.2)}
                         initial="hidden"
                         animate="visible"
+                        className="flex justify-center px-4"
                     >
                         <motion.button
                             onClick={() => scrollTo('#collection')}
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
-                            className="px-10 py-4 border border-gold bg-transparent
-                         font-body text-[14px] tracking-[0.3em] text-gold
+                            className="w-full sm:w-auto max-w-xs sm:max-w-none px-6 sm:px-10 py-4 border border-gold bg-transparent
+                         font-body text-sm sm:text-[14px] tracking-[0.3em] text-gold
                          hover:bg-gold hover:text-obsidian
                          transition-colors duration-300 cursor-pointer"
                         >
@@ -265,7 +271,6 @@ export default function Hero() {
                         y: { delay: 1.6, duration: 1.5, repeat: Infinity, ease: 'easeInOut' },
                     }}
                 >
-                    {/* Chevron down */}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"

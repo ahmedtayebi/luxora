@@ -83,78 +83,20 @@ function BottleSVG({ accent }: { accent: string }) {
         <svg
             viewBox="0 0 60 130"
             fill="none"
-            className="w-[60px] h-[130px] transition-transform duration-500 group-hover:scale-105"
+            className="w-[48px] h-[104px] sm:w-[60px] sm:h-[130px] transition-transform duration-500 group-hover:scale-105"
         >
             {/* Cap */}
-            <rect
-                x="20"
-                y="0"
-                width="20"
-                height="12"
-                rx="2"
-                fill={accent}
-                fillOpacity="0.4"
-            />
+            <rect x="20" y="0" width="20" height="12" rx="2" fill={accent} fillOpacity="0.4" />
             {/* Neck */}
-            <rect
-                x="22"
-                y="12"
-                width="16"
-                height="24"
-                rx="1"
-                stroke={accent}
-                strokeOpacity="0.7"
-                strokeWidth="1"
-                fill="none"
-            />
+            <rect x="22" y="12" width="16" height="24" rx="1" stroke={accent} strokeOpacity="0.7" strokeWidth="1" fill="none" />
             {/* Body */}
-            <rect
-                x="15"
-                y="36"
-                width="30"
-                height="80"
-                rx="2"
-                stroke={accent}
-                strokeOpacity="0.7"
-                strokeWidth="1"
-                fill="none"
-            />
+            <rect x="15" y="36" width="30" height="80" rx="2" stroke={accent} strokeOpacity="0.7" strokeWidth="1" fill="none" />
             {/* Decorative horizontal lines on body */}
-            <line
-                x1="18"
-                y1="56"
-                x2="42"
-                y2="56"
-                stroke={accent}
-                strokeOpacity="0.3"
-                strokeWidth="0.5"
-            />
-            <line
-                x1="18"
-                y1="96"
-                x2="42"
-                y2="96"
-                stroke={accent}
-                strokeOpacity="0.3"
-                strokeWidth="0.5"
-            />
+            <line x1="18" y1="56" x2="42" y2="56" stroke={accent} strokeOpacity="0.3" strokeWidth="0.5" />
+            <line x1="18" y1="96" x2="42" y2="96" stroke={accent} strokeOpacity="0.3" strokeWidth="0.5" />
             {/* Center vertical line with diamond */}
-            <line
-                x1="30"
-                y1="60"
-                x2="30"
-                y2="90"
-                stroke={accent}
-                strokeOpacity="0.25"
-                strokeWidth="0.5"
-            />
-            <polygon
-                points="30,92 33,96 30,100 27,96"
-                stroke={accent}
-                strokeOpacity="0.5"
-                strokeWidth="0.5"
-                fill="none"
-            />
+            <line x1="30" y1="60" x2="30" y2="90" stroke={accent} strokeOpacity="0.25" strokeWidth="0.5" />
+            <polygon points="30,92 33,96 30,100 27,96" stroke={accent} strokeOpacity="0.5" strokeWidth="0.5" fill="none" />
         </svg>
     )
 }
@@ -186,7 +128,7 @@ const cardVariants = {
 /* ─── Component ─────────────────────────────────────────────────── */
 export default function Collection() {
     return (
-        <section id="collection" className="py-32 px-6 relative">
+        <section id="collection" className="py-20 sm:py-32 px-4 sm:px-6 relative">
             <div className="max-w-7xl mx-auto">
                 {/* ── Section Header ───────────────────────────────────── */}
                 <motion.div
@@ -194,7 +136,7 @@ export default function Collection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-100px' }}
-                    className="text-center mb-20"
+                    className="text-center mb-12 sm:mb-20"
                 >
                     {/* Label with decorative lines */}
                     <div className="flex items-center justify-center gap-4 mb-5">
@@ -206,12 +148,12 @@ export default function Collection() {
                     </div>
 
                     {/* Title */}
-                    <h2 className="font-display text-[56px] md:text-[56px] text-[40px] text-ivory leading-tight">
+                    <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-ivory leading-tight max-w-[90vw] mx-auto">
                         عطور تحكي قصة
                     </h2>
 
                     {/* Subtitle */}
-                    <p className="font-body text-[16px] text-mist mt-4 max-w-lg mx-auto leading-[1.8]">
+                    <p className="font-body text-sm sm:text-base text-mist mt-4 max-w-lg mx-auto leading-[1.8] px-4">
                         كل عطر رحلة فريدة من المواد الخام الأكثر ندرةً في العالم
                     </p>
                 </motion.div>
@@ -222,13 +164,13 @@ export default function Collection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-100px' }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6"
                 >
                     {perfumes.map((p) => (
                         <motion.div
                             key={p.id}
                             variants={cardVariants}
-                            className="group relative flex flex-col min-h-[420px] rounded-[2px] overflow-hidden
+                            className="group relative flex flex-col w-full max-w-sm mx-auto sm:max-w-none rounded-[2px] overflow-hidden
                          bg-obsidian-card border border-obsidian-border
                          transition-all duration-[400ms] ease-out cursor-pointer
                          hover:-translate-y-1.5 hover:border-gold/40
@@ -236,7 +178,7 @@ export default function Collection() {
                         >
                             {/* ── Card top: bottle visual ────────────────────── */}
                             <div
-                                className={`relative h-[42%] min-h-[180px] bg-gradient-to-b ${p.bottleColor} flex items-center justify-center`}
+                                className={`relative h-48 sm:h-52 bg-gradient-to-b ${p.bottleColor} flex items-center justify-center`}
                             >
                                 {/* Radial accent glow */}
                                 <div
@@ -249,7 +191,7 @@ export default function Collection() {
                             </div>
 
                             {/* ── Card bottom: info ──────────────────────────── */}
-                            <div className="flex flex-col flex-1 p-6">
+                            <div className="flex flex-col flex-1 p-5 sm:p-6">
                                 {/* Collection */}
                                 <span
                                     className="font-body text-[10px] tracking-[0.4em] mb-2 opacity-70"
@@ -259,7 +201,7 @@ export default function Collection() {
                                 </span>
 
                                 {/* Name */}
-                                <h3 className="font-display text-[28px] text-ivory mb-3 leading-snug">
+                                <h3 className="font-display text-2xl sm:text-[28px] text-ivory mb-3 leading-snug">
                                     {p.name}
                                 </h3>
 
@@ -276,15 +218,15 @@ export default function Collection() {
                                 {/* Divider */}
                                 <div className="h-px bg-gold/10 my-4" />
 
-                                {/* Price & CTA row */}
-                                <div className="flex items-center justify-between mt-auto">
+                                {/* Price & CTA row — flex-col on very small screens, flex-row otherwise */}
+                                <div className="flex flex-col [@media(min-width:380px)]:flex-row items-start [@media(min-width:380px)]:items-center justify-between mt-auto gap-3 [@media(min-width:380px)]:gap-0">
                                     <span className="font-display text-[22px] text-gold">
                                         {p.price} <span className="text-[14px] text-gold/60">دج</span>
                                     </span>
                                     <a
                                         href="#order"
-                                        className="font-body text-[12px] tracking-wide px-5 py-2
-                               border rounded-[2px] transition-all duration-300"
+                                        className="w-full [@media(min-width:380px)]:w-auto font-body text-[12px] tracking-wide px-5 py-2
+                               border rounded-[2px] transition-all duration-300 text-center"
                                         style={{
                                             borderColor: p.accent,
                                             color: p.accent,
