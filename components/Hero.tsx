@@ -254,7 +254,7 @@ export default function Hero() {
             </div>
 
             {/* ── Bottom: Scroll indicator ───────────────────────────── */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3] flex flex-col items-center gap-2">
+            {/* <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3] flex flex-col items-center gap-2">
                 <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -285,7 +285,7 @@ export default function Hero() {
                         <path d="m6 9 6 6 6-6" />
                     </svg>
                 </motion.div>
-            </div>
+            </div> */}
         </section>
     )
 }

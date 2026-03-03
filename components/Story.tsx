@@ -134,7 +134,7 @@ export default function Story() {
                                     className="font-display text-3xl sm:text-4xl lg:text-5xl leading-none"
                                     style={goldGradientStyle}
                                 >
-                                    <CountUp to={27} suffix="+" />
+                                    <CountUp to={9} suffix="+" />
                                 </span>
                                 <span className="font-body text-[10px] sm:text-xs text-mist mt-2 tracking-wide">
                                     سنة خبرة
@@ -165,7 +165,7 @@ export default function Story() {
                             <div className="sm:hidden" />
 
                             {/* Stat 3 */}
-                            <div className="flex flex-col items-center text-center">
+                            {/* <div className="flex flex-col items-center text-center">
                                 <span
                                     className="font-display text-3xl sm:text-4xl lg:text-5xl leading-none"
                                     style={goldGradientStyle}
@@ -175,7 +175,7 @@ export default function Story() {
                                 <span className="font-body text-[10px] sm:text-xs text-mist mt-2 tracking-wide">
                                     دولة حول العالم
                                 </span>
-                            </div>
+                            </div> */}
                         </div>
                     </motion.div>
 
