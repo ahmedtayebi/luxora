@@ -226,7 +226,7 @@ export default function HowToOrder() {
                                 <path d="M11 16l3 3 7-7" strokeWidth="1.5" />
                             </svg>
                             <span className="font-display text-[17px] sm:text-[20px] text-ivory">
-                                توصيل مضمون لـ ٥٨ ولاية
+                                توصيل مضمون لـ 68 ولاية
                             </span>
                         </div>
 
@@ -240,7 +240,7 @@ export default function HowToOrder() {
                                 <path d="M16 9v8l5 3" strokeWidth="1.5" />
                             </svg>
                             <span className="font-display text-[17px] sm:text-[20px] text-ivory">
-                                تأكيد خلال ٢٤ ساعة
+                                تأكيد خلال 24 ساعة
                             </span>
                         </div>
 

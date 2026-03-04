@@ -96,7 +96,7 @@ export default function Footer() {
             {/* ════════════════════════════════════════════════════════
           NEWSLETTER STRIP
       ════════════════════════════════════════════════════════ */}
-            <div
+            {/* <div
                 className="py-10 px-4 sm:px-6 text-center"
                 style={{
                     backgroundColor: '#0F0F0F',
@@ -166,7 +166,7 @@ export default function Footer() {
                         )}
                     </AnimatePresence>
                 </motion.div>
-            </div>
+            </div> */}
 
             {/* ════════════════════════════════════════════════════════
           MAIN FOOTER GRID
@@ -178,7 +178,7 @@ export default function Footer() {
                     <div className="lg:col-span-1 text-center sm:text-right">
                         <a href="#hero">
                             <span className="font-display text-[32px] leading-none" style={goldGrad}>
-                                لوكسورا
+                                Luxora
                             </span>
                         </a>
                         <p className="font-body text-[9px] tracking-[0.6em] text-mist mt-1">
@@ -291,7 +291,7 @@ export default function Footer() {
                             }
                         />
                         <p className="font-body text-[12px] text-mist/50 mt-1">
-                            الأحد – الخميس: ٩ص – ٦م
+                            الأحد – الخميس
                         </p>
                     </div>
                 </div>
@@ -306,7 +306,7 @@ export default function Footer() {
             >
                 <div className="max-w-7xl mx-auto flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:justify-between">
                     <p className="font-body text-[11px] text-mist/40">
-                        © ٢٠٢٤ لوكسورا. جميع الحقوق محفوظة.
+                        © 2026 لوكسورا. جميع الحقوق محفوظة.
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
                         <a href="#" className="font-body text-[11px] text-mist/40 hover:text-gold transition-colors duration-200">

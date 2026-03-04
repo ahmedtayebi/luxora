@@ -182,7 +182,7 @@ export default function Hero() {
                         animate="visible"
                         className="font-body text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.6em] text-gold/70 mb-6"
                     >
-                        — مجموعة حصرية ٢٠٢٤ —
+                        — مجموعة حصرية 2026 —
                     </motion.p>
 
                     {/* Item 2: Main brand name */}
@@ -200,8 +200,7 @@ export default function Hero() {
                             backgroundClip: 'text',
                         }}
                     >
-                        لوكسورا
-                    </motion.h1>
+Luxora                    </motion.h1>
 
                     {/* Item 3: Animated divider */}
                     <motion.div

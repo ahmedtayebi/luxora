@@ -24,7 +24,6 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
 
-    /* ── Scroll detection ─────────────────────────────────────────── */
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50)
         window.addEventListener('scroll', onScroll, { passive: true })
@@ -32,13 +31,11 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
-    /* ── Lock body scroll when mobile menu is open ────────────────── */
     useEffect(() => {
         document.body.style.overflow = menuOpen ? 'hidden' : ''
         return () => { document.body.style.overflow = '' }
     }, [menuOpen])
 
-    /* ── Smooth scroll handler ────────────────────────────────────── */
     const handleNav = useCallback(
         (href: string) => {
             setMenuOpen(false)
@@ -71,8 +68,7 @@ export default function Navbar() {
                         className="group flex flex-col items-start gap-0 relative overflow-hidden"
                     >
                         <span className="font-display text-lg sm:text-xl md:text-2xl text-gold leading-tight group-hover:shimmer transition-all duration-500">
-                            لوكسورا
-                        </span>
+Luxora                        </span>
                         <span className="hidden sm:block font-body text-[8px] tracking-[0.5em] text-mist uppercase leading-none mt-0.5">
                             Haute Parfum
                         </span>
