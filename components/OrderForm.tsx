@@ -78,12 +78,12 @@ interface PerfumeOption {
 }
 
 const perfumeOptions: PerfumeOption[] = [
-    { name: 'ليلة أبدية', price: 8500 },
-    { name: 'ضوء ذهبي', price: 9200 },
-    { name: 'روح باريس', price: 7800 },
-    { name: 'صحراء حمراء', price: 8900 },
-    { name: 'فجر البحر', price: 7200 },
-    { name: 'حرير أبيض', price: 7500 },
+    { name: 'Nuit Éternelle', price: 8500 },
+    { name: 'Lueur Dorée', price: 9200 },
+    { name: 'Esprit de Paris', price: 7800 },
+    { name: 'Désert Rouge', price: 8900 },
+    { name: 'Aube Marine', price: 7200 },
+    { name: 'Soie Blanche', price: 7500 },
 ]
 
 /* ═══════════════════════════════════════════════════════════════

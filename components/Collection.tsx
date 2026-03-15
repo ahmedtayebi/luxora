@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 /* ─── Perfume data ──────────────────────────────────────────────── */
@@ -12,94 +13,77 @@ interface Perfume {
     price: string
     accent: string
     bottleColor: string
+    image: string
 }
 
 const perfumes: readonly Perfume[] = [
     {
         id: 1,
-        name: 'ليلة أبدية',
+        name: 'Nuit Éternelle',
         collection: 'المجموعة السوداء',
         description: 'عمق غامض من العود الهندي والورد الأسود والعنبر',
         notes: ['عود هندي', 'ورد أسود', 'عنبر'],
         price: '8,500',
         accent: '#C9A84C',
         bottleColor: 'from-yellow-900 to-amber-950',
+        image: '/images/karly-jones-4i9ef6xU738-unsplash.jpg',
     },
     {
         id: 2,
-        name: 'ضوء ذهبي',
+        name: 'Lueur Dorée',
         collection: 'المجموعة الذهبية',
         description: 'إشراق الياسمين والزعفران الفارسي مع الصندل',
         notes: ['ياسمين', 'زعفران', 'صندل'],
         price: '9,200',
         accent: '#E8C96A',
         bottleColor: 'from-amber-700 to-yellow-800',
+        image: '/images/jeroen-van-roij-sLQt9PjsCcs-unsplash.jpg',
     },
     {
         id: 3,
-        name: 'روح باريس',
+        name: 'Esprit de Paris',
         collection: 'المجموعة الكلاسيكية',
         description: 'أناقة باريسية بنفسجية الأيرس والأرز والمسك',
         notes: ['أيرس', 'أرز', 'مسك أبيض'],
         price: '7,800',
         accent: '#D4B8E0',
         bottleColor: 'from-purple-900 to-slate-900',
+        image: '/images/fernando-andrade-potCPE_Cw8A-unsplash.jpg',
     },
     {
         id: 4,
-        name: 'صحراء حمراء',
+        name: 'Désert Rouge',
         collection: 'المجموعة الشرقية',
         description: 'حرارة القرفة والفيتيفر والجلد الفاخر',
         notes: ['قرفة', 'فيتيفر', 'جلد'],
         price: '8,900',
         accent: '#C0724A',
         bottleColor: 'from-red-950 to-stone-900',
+        image: '/images/jeroen-den-otter-2b0JeJTEclQ-unsplash.jpg',
     },
     {
         id: 5,
-        name: 'فجر البحر',
+        name: 'Aube Marine',
         collection: 'المجموعة الزرقاء',
         description: 'نسيم البحر مع النيرولي والشاي الأبيض النادر',
         notes: ['ملح بحري', 'نيرولي', 'شاي أبيض'],
         price: '7,200',
         accent: '#6AAFD4',
         bottleColor: 'from-blue-950 to-cyan-950',
+        image: '/images/yixian-zhao-q7iZCOXGOWY-unsplash.jpg',
     },
     {
         id: 6,
-        name: 'حرير أبيض',
+        name: 'Soie Blanche',
         collection: 'المجموعة البيضاء',
         description: 'نعومة الأيرس والمسك مع نضارة البيرغموت',
         notes: ['أيرس', 'مسك', 'بيرغموت'],
         price: '7,500',
         accent: '#E8E0D0',
         bottleColor: 'from-stone-700 to-stone-900',
+        image: '/images/laura-chouette-gbT2KAq1V5c-unsplash.jpg',
     },
 ] as const
-
-/* ─── Inline SVG perfume bottle ─────────────────────────────────── */
-function BottleSVG({ accent }: { accent: string }) {
-    return (
-        <svg
-            viewBox="0 0 60 130"
-            fill="none"
-            className="w-[48px] h-[104px] sm:w-[60px] sm:h-[130px] transition-transform duration-500 group-hover:scale-105"
-        >
-            {/* Cap */}
-            <rect x="20" y="0" width="20" height="12" rx="2" fill={accent} fillOpacity="0.4" />
-            {/* Neck */}
-            <rect x="22" y="12" width="16" height="24" rx="1" stroke={accent} strokeOpacity="0.7" strokeWidth="1" fill="none" />
-            {/* Body */}
-            <rect x="15" y="36" width="30" height="80" rx="2" stroke={accent} strokeOpacity="0.7" strokeWidth="1" fill="none" />
-            {/* Decorative horizontal lines on body */}
-            <line x1="18" y1="56" x2="42" y2="56" stroke={accent} strokeOpacity="0.3" strokeWidth="0.5" />
-            <line x1="18" y1="96" x2="42" y2="96" stroke={accent} strokeOpacity="0.3" strokeWidth="0.5" />
-            {/* Center vertical line with diamond */}
-            <line x1="30" y1="60" x2="30" y2="90" stroke={accent} strokeOpacity="0.25" strokeWidth="0.5" />
-            <polygon points="30,92 33,96 30,100 27,96" stroke={accent} strokeOpacity="0.5" strokeWidth="0.5" fill="none" />
-        </svg>
-    )
-}
 
 /* ─── Animation variants ────────────────────────────────────────── */
 const headerVariant = {
@@ -187,7 +171,20 @@ export default function Collection() {
                                         background: `radial-gradient(circle at 50% 60%, ${p.accent}0D 0%, transparent 70%)`,
                                     }}
                                 />
-                                <BottleSVG accent={p.accent} />
+                                <Image
+                                    src={p.image}
+                                    alt={p.name}
+                                    fill
+                                    sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
+                                    className="object-cover opacity-90 transition-opacity duration-500 group-hover:opacity-100"
+                                    priority={p.id <= 3}
+                                />
+                                <div
+                                    className="absolute inset-0 pointer-events-none"
+                                    style={{
+                                        background: 'linear-gradient(180deg, rgba(7,7,7,0.08) 0%, rgba(7,7,7,0.35) 100%)',
+                                    }}
+                                />
                             </div>
 
                             {/* ── Card bottom: info ──────────────────────────── */}
